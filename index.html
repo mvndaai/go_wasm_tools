@@ -1,0 +1,59 @@
+<html>
+    <head lang="en">
+        <title>Go Tools</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta charset="utf-8"/>
+        <script src="https://cdn.jsdelivr.net/gh/golang/go@master/misc/wasm/wasm_exec.js"></script>
+        <script>
+            const go = new Go();
+            const loadGo = WebAssembly.instantiateStreaming(fetch("main.wasm"), go.importObject)
+        </script>
+        <style>
+            body {
+                background-color: linen;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Go Tools</h1>
+
+        <h2>Bytes Converter</h2>
+        <p>Input a byte array and it converts it to a string.</p>
+        <form>
+            <textarea id="in" rows="5" cols="70">[72 101 108 108 111 32 87 111 114 108 100]</textarea>
+            <input id="submit" type="submit" disabled="true" value="Convert Bytes"/>
+        </form>
+        <code id="code"></code>
+
+
+        <style>#forkongithub a{background:#000;color:#fff;text-decoration:none;font-family:arial,sans-serif;text-align:center;font-weight:bold;padding:5px 40px;font-size:1rem;line-height:2rem;position:relative;transition:0.5s;}#forkongithub a:hover{background:#c11;color:#fff;}#forkongithub a::before,#forkongithub a::after{content:"";width:100%;display:block;position:absolute;top:1px;left:0;height:1px;background:#fff;}#forkongithub a::after{bottom:1px;top:auto;}@media screen and (min-width:800px){#forkongithub{position:fixed;display:block;top:0;right:0;width:200px;overflow:hidden;height:200px;z-index:9999;}#forkongithub a{width:200px;position:absolute;top:60px;right:-60px;transform:rotate(45deg);-webkit-transform:rotate(45deg);-ms-transform:rotate(45deg);-moz-transform:rotate(45deg);-o-transform:rotate(45deg);box-shadow:4px 4px 10px rgba(0,0,0,0.8);}}</style>
+        <span id="forkongithub"><a href="https://github.com/mvndaai/kaprekar_wasm">Fork me on GitHub</a></span>
+        <script>
+            loadGo.then((result) => {
+                go.run(result.instance);
+                document.querySelector('#submit').disabled = false;
+            });
+
+            const input = document.querySelector('#in');
+            const form = document.querySelector('form');
+            const codeBlock = document.querySelector('#code');
+            input.focus();
+
+            form.onsubmit = (e) => {
+                e.preventDefault();
+                const k = JSON.parse(bytesToString(input.value));
+                console.log(`Response from Go bytesToString(${input.value})`, k);
+                if (k.error) {
+                    codeBlock.innerText = k.error;
+                    return;
+                }
+
+                codeBlock.innerText = k.response;
+            }
+        </script>
+    </body>
+</html>
