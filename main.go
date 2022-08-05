@@ -7,6 +7,8 @@ import (
 	"strconv"
 	"strings"
 	"syscall/js"
+
+	"github.com/mvndaai/go_wasm_tools/internal/jsontools"
 )
 
 type JSWrappable func(string) (string, error)
@@ -18,6 +20,10 @@ func main() {
 		f    JSWrappable
 	}{
 		{"bytesToString", bytesToString},
+		{"escapeJSON", jsontools.Escape},
+		{"unescapeJSON", jsontools.Unescape},
+		{"compressJSON", jsontools.Compress},
+		{"prettyJSON", jsontools.Pretty},
 	}
 
 	for _, jsF := range jsFuncs {

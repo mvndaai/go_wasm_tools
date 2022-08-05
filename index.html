@@ -9,10 +9,16 @@
             const loadGo = WebAssembly.instantiateStreaming(fetch("main.wasm"), go.importObject)
         </script>
         <style>
-            body {
+            body, .column {
                 background-color: linen;
                 display: flex;
                 flex-direction: column;
+                justify-content: center;
+                align-items: center;
+            }
+            .row {
+                display: flex;
+                flex-direction: row;
                 justify-content: center;
                 align-items: center;
             }
@@ -20,15 +26,26 @@
     </head>
     <body>
         <h1>Go Tools</h1>
+        <p>These are functions writting in Golang using WASM.</p>
+
+        <h2>JSON</h2>
+        <div class="row">
+            <textarea id="jsontext" rows="5" cols="70">{"foo":"bar"}</textarea>
+            <div class="column">
+                <button id="pretty">Pretty</button>
+                <button id="compress">Compress</button>
+                <button id="escape">Escape</button>
+                <button id="unescape">Unescape</button>
+            </div>
+        </div>
 
         <h2>Bytes Converter</h2>
         <p>Input a byte array and it converts it to a string.</p>
-        <form>
+        <form calss="row">
             <textarea id="in" rows="5" cols="70">[72 101 108 108 111 32 87 111 114 108 100]</textarea>
             <input id="submit" type="submit" disabled="true" value="Convert Bytes"/>
         </form>
         <code id="code"></code>
-
 
         <style>#forkongithub a{background:#000;color:#fff;text-decoration:none;font-family:arial,sans-serif;text-align:center;font-weight:bold;padding:5px 40px;font-size:1rem;line-height:2rem;position:relative;transition:0.5s;}#forkongithub a:hover{background:#c11;color:#fff;}#forkongithub a::before,#forkongithub a::after{content:"";width:100%;display:block;position:absolute;top:1px;left:0;height:1px;background:#fff;}#forkongithub a::after{bottom:1px;top:auto;}@media screen and (min-width:800px){#forkongithub{position:fixed;display:block;top:0;right:0;width:200px;overflow:hidden;height:200px;z-index:9999;}#forkongithub a{width:200px;position:absolute;top:60px;right:-60px;transform:rotate(45deg);-webkit-transform:rotate(45deg);-ms-transform:rotate(45deg);-moz-transform:rotate(45deg);-o-transform:rotate(45deg);box-shadow:4px 4px 10px rgba(0,0,0,0.8);}}</style>
         <span id="forkongithub"><a href="https://github.com/mvndaai/go_wasm_tools">Fork me on GitHub</a></span>
@@ -54,6 +71,55 @@
 
                 codeBlock.innerText = k.response;
             }
+
+
+            const jsontext = document.querySelector('#jsontext');
+            const pretty = document.querySelector('#pretty');
+            const compress = document.querySelector('#compress');
+            const escape = document.querySelector('#escape');
+            const unescape = document.querySelector('#unescape');
+
+            pretty.onclick = (e) => {
+                e.preventDefault();
+                const k = JSON.parse(prettyJSON(jsontext.value));
+                console.log(`Response from Go pretty(${jsontext.value})`, k);
+                if (k.error) {
+                    console.error(k.error)
+                    return;
+                }
+                jsontext.value = k.response;
+            }
+            compress.onclick = (e) => {
+                e.preventDefault();
+                const k = JSON.parse(compressJSON(jsontext.value));
+                console.log(`Response from Go compress(${jsontext.value})`, k);
+                if (k.error) {
+                    console.error(k.error)
+                    return;
+                }
+                jsontext.value = k.response;
+            }
+            escape.onclick = (e) => {
+                e.preventDefault();
+                const k = JSON.parse(escapeJSON(jsontext.value));
+                console.log(`Response from Go escape(${jsontext.value})`, k);
+                if (k.error) {
+                    console.error(k.error)
+                    return;
+                }
+                jsontext.value = k.response;
+            }
+            unescape.onclick = (e) => {
+                e.preventDefault();
+                const k = JSON.parse(unescapeJSON(jsontext.value));
+                console.log(`Response from Go unescape(${jsontext.value})`, k);
+                if (k.error) {
+                    console.error(k.error)
+                    return;
+                }
+                jsontext.value = k.response;
+            }
+
         </script>
     </body>
 </html>
