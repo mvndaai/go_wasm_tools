@@ -3,7 +3,7 @@
         <title>Go Tools</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta charset="utf-8"/>
-        <script src="https://cdn.jsdelivr.net/gh/golang/go@master/misc/wasm/wasm_exec.js"></script>
+        <script src="https://cdn.jsdelivr.net/gh/golang/go@go1.20.2/misc/wasm/wasm_exec.js"></script>
         <script>
             const go = new Go();
             const loadGo = WebAssembly.instantiateStreaming(fetch("main.wasm"), go.importObject)
