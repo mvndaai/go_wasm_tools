@@ -8,6 +8,7 @@ import (
 	"strings"
 	"syscall/js"
 
+	"github.com/mvndaai/go_wasm_tools/internal/htmltools"
 	"github.com/mvndaai/go_wasm_tools/internal/jsontools"
 )
 
@@ -24,6 +25,8 @@ func main() {
 		{"unescapeJSON", jsontools.Unescape},
 		{"compressJSON", jsontools.Compress},
 		{"prettyJSON", jsontools.Pretty},
+		{"escapeHTML", htmltools.Escape},
+		{"unescapeHTML", htmltools.Unescape},
 	}
 
 	for _, jsF := range jsFuncs {
