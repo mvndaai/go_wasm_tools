@@ -39,6 +39,15 @@
             </div>
         </div>
 
+        <h2>HTML</h2>
+        <div class="row">
+            <textarea id="html-text" rows="5" cols="70">&lt;input/&gt;</textarea>
+            <div class="column">
+                <button id="html-escape">Escape</button>
+                <button id="html-unescape">Unescape</button>
+            </div>
+        </div>
+
         <h2>Bytes Converter</h2>
         <p>Input a byte array and it converts it to a string.</p>
         <form calss="row">
@@ -58,7 +67,6 @@
             const input = document.querySelector('#in');
             const form = document.querySelector('form');
             const codeBlock = document.querySelector('#code');
-            input.focus();
 
             form.onsubmit = (e) => {
                 e.preventDefault();
@@ -74,6 +82,7 @@
 
 
             const jsontext = document.querySelector('#jsontext');
+            jsontext.focus();
             const pretty = document.querySelector('#pretty');
             const compress = document.querySelector('#compress');
             const escape = document.querySelector('#escape');
@@ -118,6 +127,31 @@
                     return;
                 }
                 jsontext.value = k.response;
+            }
+
+            const htmlText = document.querySelector('#html-text');
+            const htmlEscape = document.querySelector('#html-escape');
+            const htmlEnescape = document.querySelector('#html-unescape');
+
+            htmlEscape.onclick = (e) => {
+                e.preventDefault();
+                const k = JSON.parse(escapeHTML(htmlText.value));
+                console.log(`Response from Go escape(${htmlText.value})`, k);
+                if (k.error) {
+                    console.error(k.error)
+                    return;
+                }
+                htmlText.value = k.response;
+            }
+            htmlEnescape.onclick = (e) => {
+                e.preventDefault();
+                const k = JSON.parse(unescapeHTML(htmlText.value));
+                console.log(`Response from Go unescape(${htmlText.value})`, k);
+                if (k.error) {
+                    console.error(k.error)
+                    return;
+                }
+                htmlText.value = k.response;
             }
 
         </script>
