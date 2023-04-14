@@ -14,6 +14,7 @@ func TestEscapeUnescape(t *testing.T) {
 	}{
 		{unescaped: "<div>", escaped: "&lt;div&gt;"},
 		{unescaped: "&'<>\"", escaped: "&amp;&#39;&lt;&gt;&#34;"},
+		{unescaped: "\u003C", escaped: "&lt;"},
 	}
 
 	for _, tt := range tests {
