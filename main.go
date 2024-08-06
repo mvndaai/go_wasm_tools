@@ -29,12 +29,18 @@ func main() {
 		{"unescapeHTML", htmltools.Unescape},
 		{"bEncode", htmltools.B64Encode},
 		{"bDecode", htmltools.B64Decode},
+		{"urlEncode", htmltools.URLEncode},
+		{"urlDecode", htmltools.URLDecode},
 	}
 
+	var loadedFuncs []string
+	var m = make(map[string]any)
 	for _, jsF := range jsFuncs {
-		js.Global().Set(jsF.name, JSWrapper(jsF.f))
-		fmt.Printf("Function '%s' loaded from Go\n", jsF.name)
+		m[jsF.name] = JSWrapper(jsF.f)
+		loadedFuncs = append(loadedFuncs, jsF.name)
 	}
+	js.Global().Set("golang", m)
+	fmt.Println("Functions loaded into 'golang' object", loadedFuncs)
 
 	// Keep the program alive so functions can be run over and over
 	<-make(chan bool)

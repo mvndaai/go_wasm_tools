@@ -3,6 +3,7 @@ package htmltools
 import (
 	b64 "encoding/base64"
 	"html"
+	"net/url"
 )
 
 func Escape(s string) (string, error) {
@@ -24,4 +25,12 @@ func B64Decode(s string) (string, error) {
 		return "", err
 	}
 	return string(data), nil
+}
+
+func URLEncode(s string) (string, error) {
+	return url.QueryEscape(s), nil
+}
+
+func URLDecode(s string) (string, error) {
+	return url.QueryUnescape(s)
 }

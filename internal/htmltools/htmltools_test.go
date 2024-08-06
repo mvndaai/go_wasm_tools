@@ -66,3 +66,22 @@ func TestB64(t *testing.T) {
 		})
 	}
 }
+
+func TestUrlEncodeDecode(t *testing.T) {
+	tests := []struct {
+		decoded string
+		encoded string
+	}{
+		{decoded: `{"foo":"bar"}`, encoded: "%7B%22foo%22%3A%22bar%22%7D"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.decoded, func(t *testing.T) {
+			actualEncoded, _ := htmltools.URLEncode(tt.decoded)
+			assert.Equal(t, tt.encoded, actualEncoded)
+
+			actualDecoded, _ := htmltools.URLDecode(actualEncoded)
+			assert.Equal(t, tt.decoded, actualDecoded)
+		})
+	}
+}

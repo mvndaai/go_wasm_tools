@@ -48,14 +48,18 @@
             </div>
         </div>
 
-        <h2>Base 64</h2>
+        <h2>Encode/Decode</h2>
         <div class="row">
-            <textarea id="b64-text" rows="5" cols="70">Hello World</textarea>
+            <textarea id="b64-text" rows="5" cols="70">{"foo":"bar"}</textarea>
             <div class="column">
-                <button id="b64-encode">Encode</button>
-                <button id="b64-decode">Decode</button>
+                <button id="b64-encode">Base64 Encode</button>
+                <button id="b64-decode">Base64 Decode</button>
+
+                <button id="url-encode">URL Encode</button>
+                <button id="url-decode">URL Decode</button>
             </div>
         </div>
+
 
         <h2>Bytes Converter</h2>
         <p>Input a byte array and it converts it to a string.</p>
@@ -79,7 +83,7 @@
 
             form.onsubmit = (e) => {
                 e.preventDefault();
-                const k = JSON.parse(bytesToString(input.value));
+                const k = JSON.parse(golang.bytesToString(input.value));
                 console.log(`Response from Go bytesToString(${input.value})`, k);
                 if (k.error) {
                     codeBlock.innerText = k.error;
@@ -99,8 +103,8 @@
 
             pretty.onclick = (e) => {
                 e.preventDefault();
-                const k = JSON.parse(prettyJSON(jsontext.value));
-                console.log(`Response from Go pretty(${jsontext.value})`, k);
+                const k = JSON.parse(golang.prettyJSON(jsontext.value));
+                //console.log(`Response from Go prettyJSON(${jsontext.value})`, k);
                 if (k.error) {
                     console.error(k.error)
                     return;
@@ -109,8 +113,8 @@
             }
             compress.onclick = (e) => {
                 e.preventDefault();
-                const k = JSON.parse(compressJSON(jsontext.value));
-                console.log(`Response from Go compress(${jsontext.value})`, k);
+                const k = JSON.parse(golang.compressJSON(jsontext.value));
+                //console.log(`Response from Go compressJSON(${jsontext.value})`, k);
                 if (k.error) {
                     console.error(k.error)
                     return;
@@ -119,8 +123,8 @@
             }
             escape.onclick = (e) => {
                 e.preventDefault();
-                const k = JSON.parse(escapeJSON(jsontext.value));
-                console.log(`Response from Go escape(${jsontext.value})`, k);
+                const k = JSON.parse(golang.escapeJSON(jsontext.value));
+                //console.log(`Response from Go escapeJSON(${jsontext.value})`, k);
                 if (k.error) {
                     console.error(k.error)
                     return;
@@ -129,8 +133,8 @@
             }
             unescape.onclick = (e) => {
                 e.preventDefault();
-                const k = JSON.parse(unescapeJSON(jsontext.value));
-                console.log(`Response from Go unescape(${jsontext.value})`, k);
+                const k = JSON.parse(golang.unescapeJSON(jsontext.value));
+                //console.log(`Response from Go unescapeJSON(${jsontext.value})`, k);
                 if (k.error) {
                     console.error(k.error)
                     return;
@@ -144,8 +148,8 @@
 
             htmlEscape.onclick = (e) => {
                 e.preventDefault();
-                const k = JSON.parse(escapeHTML(htmlText.value));
-                console.log(`Response from Go escape(${htmlText.value})`, k);
+                const k = JSON.parse(golang.escapeHTML(htmlText.value));
+                //console.log(`Response from Go escapeHTML(${htmlText.value})`, k);
                 if (k.error) {
                     console.error(k.error)
                     return;
@@ -154,8 +158,8 @@
             }
             htmlEnescape.onclick = (e) => {
                 e.preventDefault();
-                const k = JSON.parse(unescapeHTML(htmlText.value));
-                console.log(`Response from Go unescape(${htmlText.value})`, k);
+                const k = JSON.parse(golang.unescapeHTML(htmlText.value));
+                //console.log(`Response from Go unescapeHTML(${htmlText.value})`, k);
                 if (k.error) {
                     console.error(k.error)
                     return;
@@ -169,8 +173,8 @@
 
             b64Encode.onclick = (e) => {
                 e.preventDefault();
-                const k = JSON.parse(bEncode(b64Text.value));
-                console.log(`Response from Go escape(${b64Text.value})`, k);
+                const k = JSON.parse(golang.bEncode(b64Text.value));
+                //console.log(`Response from Go bEncode(${b64Text.value})`, k);
                 if (k.error) {
                     console.error(k.error)
                     return;
@@ -179,14 +183,39 @@
             }
             b64Decode.onclick = (e) => {
                 e.preventDefault();
-                const k = JSON.parse(bDecode(b64Text.value));
-                console.log(`Response from Go unescape(${b64Text.value})`, k);
+                const k = JSON.parse(golang.bDecode(b64Text.value));
+                //console.log(`Response from Go bDecode(${b64Text.value})`, k);
                 if (k.error) {
                     console.error(k.error)
                     return;
                 }
                 b64Text.value = k.response;
             }
+
+            const urlEncode = document.querySelector('#url-encode');
+            const urlDecode = document.querySelector('#url-decode');
+
+            urlEncode.onclick = (e) => {
+                e.preventDefault();
+                const k = JSON.parse(golang.urlEncode(b64Text.value));
+                //console.log(`Response from Go urlEncode(${b64Text.value})`, k);
+                if (k.error) {
+                    console.error(k.error)
+                    return;
+                }
+                b64Text.value = k.response;
+            }
+            urlDecode.onclick = (e) => {
+                e.preventDefault();
+                const k = JSON.parse(golang.urlDecode(b64Text.value));
+                //console.log(`Response from Go urlDecode(${b64Text.value})`, k);
+                if (k.error) {
+                    console.error(k.error)
+                    return;
+                }
+                b64Text.value = k.response;
+            }
+
         </script>
     </body>
 </html>
