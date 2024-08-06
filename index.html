@@ -101,121 +101,44 @@
             const escape = document.querySelector('#escape');
             const unescape = document.querySelector('#unescape');
 
-            pretty.onclick = (e) => {
-                e.preventDefault();
-                const k = JSON.parse(golang.prettyJSON(jsontext.value));
-                //console.log(`Response from Go prettyJSON(${jsontext.value})`, k);
-                if (k.error) {
-                    console.error(k.error)
-                    return;
+
+            function addOnClick(button, goFn, input, output) {
+                button.onclick = (e) => {
+                    e.preventDefault();
+                    const k = JSON.parse(golang[goFn](input.value));
+                    console.log(`Response from Go ${goFn.name}(${input.value})`, k);
+                    if (k.error) {
+                        console.error(k.error)
+                        return;
+                    }
+                    output.value = k.response;
                 }
-                jsontext.value = k.response;
             }
-            compress.onclick = (e) => {
-                e.preventDefault();
-                const k = JSON.parse(golang.compressJSON(jsontext.value));
-                //console.log(`Response from Go compressJSON(${jsontext.value})`, k);
-                if (k.error) {
-                    console.error(k.error)
-                    return;
-                }
-                jsontext.value = k.response;
-            }
-            escape.onclick = (e) => {
-                e.preventDefault();
-                const k = JSON.parse(golang.escapeJSON(jsontext.value));
-                //console.log(`Response from Go escapeJSON(${jsontext.value})`, k);
-                if (k.error) {
-                    console.error(k.error)
-                    return;
-                }
-                jsontext.value = k.response;
-            }
-            unescape.onclick = (e) => {
-                e.preventDefault();
-                const k = JSON.parse(golang.unescapeJSON(jsontext.value));
-                //console.log(`Response from Go unescapeJSON(${jsontext.value})`, k);
-                if (k.error) {
-                    console.error(k.error)
-                    return;
-                }
-                jsontext.value = k.response;
-            }
+
+            addOnClick(pretty, 'prettyJSON', jsontext, jsontext);
+            addOnClick(compress, 'compressJSON', jsontext, jsontext);
+            addOnClick(escape, 'escapeJSON', jsontext, jsontext);
+            addOnClick(unescape, 'unescapeJSON', jsontext, jsontext);
 
             const htmlText = document.querySelector('#html-text');
             const htmlEscape = document.querySelector('#html-escape');
             const htmlEnescape = document.querySelector('#html-unescape');
 
-            htmlEscape.onclick = (e) => {
-                e.preventDefault();
-                const k = JSON.parse(golang.escapeHTML(htmlText.value));
-                //console.log(`Response from Go escapeHTML(${htmlText.value})`, k);
-                if (k.error) {
-                    console.error(k.error)
-                    return;
-                }
-                htmlText.value = k.response;
-            }
-            htmlEnescape.onclick = (e) => {
-                e.preventDefault();
-                const k = JSON.parse(golang.unescapeHTML(htmlText.value));
-                //console.log(`Response from Go unescapeHTML(${htmlText.value})`, k);
-                if (k.error) {
-                    console.error(k.error)
-                    return;
-                }
-                htmlText.value = k.response;
-            }
+            addOnClick(htmlEscape, 'escapeHTML', htmlText, htmlText);
+            addOnClick(htmlEnescape, 'unescapeHTML', htmlText, htmlText);
 
             const b64Text = document.querySelector('#b64-text');
             const b64Encode = document.querySelector('#b64-encode');
             const b64Decode = document.querySelector('#b64-decode');
 
-            b64Encode.onclick = (e) => {
-                e.preventDefault();
-                const k = JSON.parse(golang.bEncode(b64Text.value));
-                //console.log(`Response from Go bEncode(${b64Text.value})`, k);
-                if (k.error) {
-                    console.error(k.error)
-                    return;
-                }
-                b64Text.value = k.response;
-            }
-            b64Decode.onclick = (e) => {
-                e.preventDefault();
-                const k = JSON.parse(golang.bDecode(b64Text.value));
-                //console.log(`Response from Go bDecode(${b64Text.value})`, k);
-                if (k.error) {
-                    console.error(k.error)
-                    return;
-                }
-                b64Text.value = k.response;
-            }
+            addOnClick(b64Encode, 'bEncode', b64Text, b64Text);
+            addOnClick(b64Decode, 'bDecode', b64Text, b64Text);
 
             const urlEncode = document.querySelector('#url-encode');
             const urlDecode = document.querySelector('#url-decode');
 
-            urlEncode.onclick = (e) => {
-                e.preventDefault();
-                const k = JSON.parse(golang.urlEncode(b64Text.value));
-                //console.log(`Response from Go urlEncode(${b64Text.value})`, k);
-                if (k.error) {
-                    console.error(k.error)
-                    return;
-                }
-                b64Text.value = k.response;
-            }
-            urlDecode.onclick = (e) => {
-                e.preventDefault();
-                const k = JSON.parse(golang.urlDecode(b64Text.value));
-                //console.log(`Response from Go urlDecode(${b64Text.value})`, k);
-                if (k.error) {
-                    console.error(k.error)
-                    return;
-                }
-                b64Text.value = k.response;
-            }
-
+            addOnClick(urlEncode, 'urlEncode', b64Text, b64Text);
+            addOnClick(urlDecode, 'urlDecode', b64Text, b64Text);
         </script>
     </body>
 </html>
