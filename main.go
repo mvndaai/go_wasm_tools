@@ -27,6 +27,8 @@ func main() {
 		{"prettyJSON", jsontools.Pretty},
 		{"escapeHTML", htmltools.Escape},
 		{"unescapeHTML", htmltools.Unescape},
+		{"b64Encode", htmltools.B64Encode},
+		{"b64Decode", htmltools.B64Decode},
 	}
 
 	for _, jsF := range jsFuncs {
