@@ -16,7 +16,7 @@ GOOS=js GOARCH=wasm go build -o main.wasm
 
 In order use wasm in Go you need Go's `wasm_exec.js` file.
 
-This repo is used to use [jsDeliver](https://www.jsdelivr.com/) as a CDN from the [Go repo](https://github.com/golang/go/blob/master/misc/wasm/wasm_exec.js) to get that file with this HTML header:
+This repo is uses [jsDeliver](https://www.jsdelivr.com/) as a CDN from the [Go repo](https://github.com/golang/go/blob/master/misc/wasm/wasm_exec.js) to get that file with this HTML header:
 ```html
 <script src="https://cdn.jsdelivr.net/gh/golang/go@go1.20.2/misc/wasm/wasm_exec.js"></script>
 ```

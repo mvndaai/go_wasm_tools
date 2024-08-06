@@ -3,7 +3,7 @@
         <title>Go Tools</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta charset="utf-8"/>
-        <script src="./wasm_exec.js"></script>
+        <script src="https://cdn.jsdelivr.net/gh/golang/go@go1.20.2/misc/wasm/wasm_exec.js"></script>
         <script>
             const go = new Go();
             const loadGo = WebAssembly.instantiateStreaming(fetch("main.wasm"), go.importObject)
@@ -45,15 +45,6 @@
             <div class="column">
                 <button id="html-escape">Escape</button>
                 <button id="html-unescape">Unescape</button>
-            </div>
-        </div>
-
-        <h2>Base 64</h2>
-        <div class="row">
-            <textarea id="b64-text" rows="5" cols="70">Hello World</textarea>
-            <div class="column">
-                <button id="b64-encode">Encode</button>
-                <button id="b64-decode">Decode</button>
             </div>
         </div>
 
@@ -163,30 +154,6 @@
                 htmlText.value = k.response;
             }
 
-            const b64Text = document.querySelector('#b64-text');
-            const b64Encode = document.querySelector('#b64-encode');
-            const b64Decode = document.querySelector('#b64-decode');
-
-            b64Encode.onclick = (e) => {
-                e.preventDefault();
-                const k = JSON.parse(window.b64Encode(b64Text.value));
-                console.log(`Response from Go escape(${b64Text.value})`, k);
-                if (k.error) {
-                    console.error(k.error)
-                    return;
-                }
-                b64Text.value = k.response;
-            }
-            b64Decode.onclick = (e) => {
-                e.preventDefault();
-                const k = JSON.parse(window.b64Decode(b64Text.value));
-                console.log(`Response from Go unescape(${b64Text.value})`, k);
-                if (k.error) {
-                    console.error(k.error)
-                    return;
-                }
-                b64Text.value = k.response;
-            }
         </script>
     </body>
 </html>

@@ -46,23 +46,3 @@ func TestUnescape(t *testing.T) {
 		})
 	}
 }
-
-func TestB64(t *testing.T) {
-	tests := []struct {
-		decoded string
-		encoded string
-	}{
-		{decoded: "Hello, World!", encoded: "SGVsbG8sIFdvcmxkIQ=="},
-		{decoded: "Hello, 世界!", encoded: "SGVsbG8sIOS4lueVjCE="},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.decoded, func(t *testing.T) {
-			actualEncoded, _ := htmltools.B64Encode(tt.decoded)
-			assert.Equal(t, tt.encoded, actualEncoded)
-
-			actualDecoded, _ := htmltools.B64Decode(actualEncoded)
-			assert.Equal(t, tt.decoded, actualDecoded)
-		})
-	}
-}
