@@ -106,7 +106,7 @@
                 button.onclick = (e) => {
                     e.preventDefault();
                     const k = JSON.parse(golang[goFn](input.value));
-                    console.log(`Response from Go ${goFn.name}(${input.value})`, k);
+                    console.log(`Response from Go ${goFn}(${input.value})`, k);
                     if (k.error) {
                         console.error(k.error)
                         return;
