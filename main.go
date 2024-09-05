@@ -21,6 +21,7 @@ func main() {
 		f    JSWrappable
 	}{
 		{"bytesToString", bytesToString},
+		{"stringToBytes", stringToBytes},
 		{"escapeJSON", jsontools.Escape},
 		{"unescapeJSON", jsontools.Unescape},
 		{"compressJSON", jsontools.Compress},
@@ -125,4 +126,8 @@ func bytesFromGolangFormat(in string) (string, error) {
 		return "", fmt.Errorf("could not decode hex string: %w", err)
 	}
 	return string(decoded), nil
+}
+
+func stringToBytes(s string) (string, error) {
+	return fmt.Sprint([]byte(s)), nil
 }
