@@ -7,7 +7,9 @@ import (
 	"strconv"
 	"strings"
 	"syscall/js"
+	"time"
 
+	uuid "github.com/gofrs/uuid/v5"
 	"github.com/mvndaai/go_wasm_tools/internal/htmltools"
 	"github.com/mvndaai/go_wasm_tools/internal/jsontools"
 )
@@ -32,6 +34,7 @@ func main() {
 		{"bDecode", htmltools.B64Decode},
 		{"urlEncode", htmltools.URLEncode},
 		{"urlDecode", htmltools.URLDecode},
+		{"genUUIDv7", GenerateUUIDv7},
 	}
 
 	var loadedFuncs []string
@@ -54,12 +57,12 @@ type output struct {
 
 func JSWrapper(f JSWrappable) js.Func {
 	return js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-		if len(args) != 1 {
+		input := ""
+		if len(args) > 1 {
 			return "Invalid no of arguments passed"
 		}
-		input := args[0].String()
-		if input == "" {
-			return "No input provided"
+		if len(args) == 1 {
+			input = args[0].String()
 		}
 		resp, err := f(input)
 		out := output{Response: resp}
@@ -130,4 +133,24 @@ func bytesFromGolangFormat(in string) (string, error) {
 
 func stringToBytes(s string) (string, error) {
 	return fmt.Sprint([]byte(s)), nil
+}
+
+func GenerateUUIDv7(s string) (string, error) {
+	if s == "" {
+		guid, err := uuid.NewV7()
+		if err != nil {
+			return "", err
+		}
+		return guid.String(), nil
+	}
+
+	atTime, err := time.Parse(time.RFC3339, s)
+	if err != nil {
+		return "", fmt.Errorf("could not parse time: %w", err)
+	}
+	guid, err := uuid.NewV7AtTime(atTime)
+	if err != nil {
+		return "", err
+	}
+	return guid.String(), nil
 }

@@ -1,8 +1,11 @@
 module github.com/mvndaai/go_wasm_tools
 
-go 1.20
+go 1.22
 
-require github.com/stretchr/testify v1.8.0
+require (
+	github.com/gofrs/uuid/v5 v5.3.0
+	github.com/stretchr/testify v1.8.0
+)
 
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect

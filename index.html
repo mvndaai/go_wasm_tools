@@ -33,10 +33,18 @@
         <p>Transforms written in Golang using WASM.</p>
 
         <div class="row">
-            <textarea id="transform-text" rows="20" cols="70">{"foo":"bar"}</textarea>
             <div class="column">
-                <button id="pretty">JSON Pretty</button>
-                <button id="compress">JSON Compress</button>
+                <textarea id="transform-text" rows="20" cols="70">{"foo":"bar"}</textarea>
+                <div>
+                    <button id="ex-json">Example JSON</button>
+                    <button id="ex-html">Example HTML</button>
+                    <button id="ex-bytes">Example Bytes</button>
+                    <button id="gen-uuidv7">Generate UUIDv7</button>
+                </div>
+            </div>
+            <div class="column">
+                <button id="pretty" disabled>JSON Pretty</button>
+                <button id="compress" disabled>JSON Compress</button>
 
                 <div class="btn-space"></div>
                 <button id="escape">JSON Escape</button>
@@ -59,17 +67,11 @@
                 <button id="byte-string">Bytes to String</button>
             </div>
         </div>
-        <div>
-            <button id="ex-json">Example JSON</button>
-            <button id="ex-html">Example HTML</button>
-            <button id="ex-bytes">Example Bytes</button>
-        </div>
 
         <style>#forkongithub a{background:#000;color:#fff;text-decoration:none;font-family:arial,sans-serif;text-align:center;font-weight:bold;padding:5px 40px;font-size:1rem;line-height:2rem;position:relative;transition:0.5s;}#forkongithub a:hover{background:#c11;color:#fff;}#forkongithub a::before,#forkongithub a::after{content:"";width:100%;display:block;position:absolute;top:1px;left:0;height:1px;background:#fff;}#forkongithub a::after{bottom:1px;top:auto;}@media screen and (min-width:800px){#forkongithub{position:fixed;display:block;top:0;right:0;width:200px;overflow:hidden;height:200px;z-index:9999;}#forkongithub a{width:200px;position:absolute;top:60px;right:-60px;transform:rotate(45deg);-webkit-transform:rotate(45deg);-ms-transform:rotate(45deg);-moz-transform:rotate(45deg);-o-transform:rotate(45deg);box-shadow:4px 4px 10px rgba(0,0,0,0.8);}}</style>
         <span id="forkongithub"><a href="https://github.com/mvndaai/go_wasm_tools">Fork me on GitHub</a></span>
         <script>
             const btns = document.querySelectorAll('button');
-            document.querySelectorAll('button').forEach(btn => btn.disabled = true);
             loadGo.then((result) => {
                 go.run(result.instance);
                 document.querySelectorAll('button').forEach(btn => btn.disabled = false);
@@ -126,21 +128,25 @@
             examples = [
                 {
                     selector: '#ex-html',
-                    text: '<input/>'
+                    text: () => '<input/>'
                 },
                 {
                     selector: '#ex-json',
-                    text: '{"foo":"bar"}'
+                    text: () =>'{"foo":"bar"}'
                 },
                 {
                     selector: '#ex-bytes',
-                    text: '[72 101 108 108 111 32 87 111 114 108 100]'
+                    text: () => '[72 101 108 108 111 32 87 111 114 108 100]'
+                },
+                {
+                    selector: '#gen-uuidv7',
+                    text: () => JSON.parse(golang['genUUIDv7']()).response
                 }
             ]
             for (const ex of examples) {
                 document.querySelector(ex.selector).onclick = (e) => {
                     e.preventDefault();
-                    transformText.value = ex.text;
+                    transformText.value = ex.text();
                 }
             }
         </script>
