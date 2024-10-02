@@ -34,7 +34,7 @@
 
         <div class="row">
             <div class="column">
-                <textarea id="transform-text" rows="20" cols="70">{"foo":"bar"}</textarea>
+                <textarea id="transform-text" rows="24" cols="70">{"foo":"bar"}</textarea>
                 <div>
                     <button id="ex-json">Example JSON</button>
                     <button id="ex-html">Example HTML</button>
@@ -61,6 +61,10 @@
                 <div class="btn-space"></div>
                 <button id="html-escape">HTML Escape</button>
                 <button id="html-unescape">HTML Unescape</button>
+
+                <div class="btn-space"></div>
+                <button id="php-serialize-encode">PHP Serialize</button>
+                <button id="php-serialize-decode">PHP Unserialize</button>
 
                 <div class="btn-space"></div>
                 <button id="string-byte">String to Bytes</button>
@@ -123,6 +127,10 @@
             addOnClick(bytesString, 'bytesToString', transformText, transformText);
             addOnClick(stringBytes, 'stringToBytes', transformText, transformText);
 
+            const phpEncode = document.querySelector('#php-serialize-encode');
+            const phpDecode = document.querySelector('#php-serialize-decode');
+            addOnClick(phpEncode, 'phpSerializeEncode', transformText, transformText);
+            addOnClick(phpDecode, 'phpSerializeDecode', transformText, transformText);
 
             // Example text
             examples = [
