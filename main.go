@@ -12,6 +12,7 @@ import (
 	uuid "github.com/gofrs/uuid/v5"
 	"github.com/mvndaai/go_wasm_tools/internal/htmltools"
 	"github.com/mvndaai/go_wasm_tools/internal/jsontools"
+	"github.com/mvndaai/go_wasm_tools/internal/pickle"
 )
 
 type JSWrappable func(string) (string, error)
@@ -35,6 +36,8 @@ func main() {
 		{"urlEncode", htmltools.URLEncode},
 		{"urlDecode", htmltools.URLDecode},
 		{"genUUIDv7", GenerateUUIDv7},
+		{"pickleEncode", pickle.Encode},
+		{"pickleDecode", pickle.Decode},
 	}
 
 	var loadedFuncs []string

@@ -3,6 +3,7 @@ module github.com/mvndaai/go_wasm_tools
 go 1.22
 
 require (
+	github.com/MacIt/pickle v1.0.0
 	github.com/gofrs/uuid/v5 v5.3.0
 	github.com/stretchr/testify v1.8.0
 )

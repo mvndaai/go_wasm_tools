@@ -65,6 +65,10 @@
                 <div class="btn-space"></div>
                 <button id="string-byte">String to Bytes</button>
                 <button id="byte-string">Bytes to String</button>
+
+                <div class="btn-space"></div>
+                <button id="pickle-encode">Py Pickle Encode</button>
+                <button id="pickle-decode">Py Pickle Decode</button>
             </div>
         </div>
 
@@ -123,6 +127,10 @@
             addOnClick(bytesString, 'bytesToString', transformText, transformText);
             addOnClick(stringBytes, 'stringToBytes', transformText, transformText);
 
+            const pickleEncode = document.querySelector('#pickle-encode');
+            const pickleDecode = document.querySelector('#pickle-decode');
+            addOnClick(pickleEncode, 'pickleEncode', transformText, transformText);
+            addOnClick(pickleDecode, 'pickleDecode', transformText, transformText);
 
             // Example text
             examples = [
