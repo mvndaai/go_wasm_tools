@@ -1,18 +1,15 @@
 package main
 
 import (
-	"encoding/hex"
 	"encoding/json"
 	"fmt"
-	"strconv"
-	"strings"
 	"syscall/js"
-	"time"
 
-	uuid "github.com/gofrs/uuid/v5"
+	"github.com/mvndaai/go_wasm_tools/internal/bytesconvert"
 	"github.com/mvndaai/go_wasm_tools/internal/htmltools"
 	"github.com/mvndaai/go_wasm_tools/internal/jsontools"
 	"github.com/mvndaai/go_wasm_tools/internal/php"
+	"github.com/mvndaai/go_wasm_tools/internal/uuid"
 )
 
 type JSWrappable func(string) (string, error)
@@ -23,8 +20,8 @@ func main() {
 		name string
 		f    JSWrappable
 	}{
-		{"bytesToString", bytesToString},
-		{"stringToBytes", stringToBytes},
+		{"bytesToString", bytesconvert.ToString},
+		{"stringToBytes", bytesconvert.FromString},
 		{"escapeJSON", jsontools.Escape},
 		{"unescapeJSON", jsontools.Unescape},
 		{"compressJSON", jsontools.Compress},
@@ -35,7 +32,7 @@ func main() {
 		{"bDecode", htmltools.B64Decode},
 		{"urlEncode", htmltools.URLEncode},
 		{"urlDecode", htmltools.URLDecode},
-		{"genUUIDv7", GenerateUUIDv7},
+		{"genUUIDv7", uuid.GenerateUUIDv7},
 		{"phpSerializeEncode", php.Encode},
 		{"phpSerializeDecode", php.Decode},
 	}
@@ -79,81 +76,4 @@ func JSWrapper(f JSWrappable) js.Func {
 		}
 		return string(pretty)
 	})
-}
-
-func bytesToString(in string) (string, error) {
-	if strings.Contains(in, "{0x") {
-		return bytesFromGolangFormat(in)
-	}
-
-	// Remove characters that are not digits
-	if strings.Contains(in, "[") {
-		in = strings.Split(in, "[")[1]
-	}
-	if strings.Contains(in, "]") {
-		in = strings.Split(in, "]")[0]
-	}
-	in = strings.ReplaceAll(in, "\n", "")
-	in = strings.TrimSpace(in)
-
-	// Split the string into an array of digits
-	in = strings.ReplaceAll(in, "0x", "")
-	in = strings.ReplaceAll(in, " ", ",")
-	in = strings.ReplaceAll(in, ",,", ",")
-	parts := strings.Split(in, ",")
-
-	var out []byte
-	for _, p := range parts {
-		i, err := strconv.Atoi(p)
-		if err != nil {
-			return "", fmt.Errorf("could not convert into int to use as byte: %w", err)
-		}
-		out = append(out, byte(i))
-	}
-
-	return string(out), nil
-}
-
-func bytesFromGolangFormat(in string) (string, error) {
-	// ex: []byte{0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x20, 0x57, 0x6f, 0x72, 0x6c, 0x64}
-
-	if strings.Contains(in, "{") {
-		in = strings.Split(in, "{")[1]
-	}
-	if strings.Contains(in, "}") {
-		in = strings.Split(in, "}")[0]
-	}
-	in = strings.ReplaceAll(in, "0x", "")
-	in = strings.ReplaceAll(in, ",", "")
-	in = strings.ReplaceAll(in, " ", "")
-
-	decoded, err := hex.DecodeString(in)
-	if err != nil {
-		return "", fmt.Errorf("could not decode hex string: %w", err)
-	}
-	return string(decoded), nil
-}
-
-func stringToBytes(s string) (string, error) {
-	return fmt.Sprint([]byte(s)), nil
-}
-
-func GenerateUUIDv7(s string) (string, error) {
-	if s == "" {
-		guid, err := uuid.NewV7()
-		if err != nil {
-			return "", err
-		}
-		return guid.String(), nil
-	}
-
-	atTime, err := time.Parse(time.RFC3339, s)
-	if err != nil {
-		return "", fmt.Errorf("could not parse time: %w", err)
-	}
-	guid, err := uuid.NewV7AtTime(atTime)
-	if err != nil {
-		return "", err
-	}
-	return guid.String(), nil
 }
