@@ -1,4 +1,5 @@
 # go_wasm_tools
+
 This is a page for tools for go running in wasm
 
 ## Building
@@ -17,13 +18,15 @@ GOOS=js GOARCH=wasm go build -o main.wasm
 In order use wasm in Go you need Go's `wasm_exec.js` file.
 
 This repo is uses [jsDeliver](https://www.jsdelivr.com/) as a CDN from the [Go repo](https://github.com/golang/go/blob/master/misc/wasm/wasm_exec.js) to get that file with this HTML header:
+
 ```html
-<script src="https://cdn.jsdelivr.net/gh/golang/go@go1.22.5/misc/wasm/wasm_exec.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/golang/go@go1.24.6/lib/wasm/wasm_exec.js"></script>
 ```
 
 To copy the file from your computer's Go install to your current directory use this command:
+
 ```bash
-cp "$(go env GOROOT)/misc/wasm/wasm_exec.js" .
+cp "$(go env GOROOT)/lib/wasm/wasm_exec.js" .
 ```
 
 ### Making Go functions avaliable from Javascript
@@ -33,6 +36,7 @@ The way to expose Go functions to the Javascript is by importing `syscall/js` an
 ### Long Running
 
 Go by default ends execution as soon as the main function completes. If you want the functions to be available you will have to keep the main function alive. I do this by having a channel at the end of `main`:
+
 ```go
 <-make(chan bool)
 ```

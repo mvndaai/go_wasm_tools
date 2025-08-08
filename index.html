@@ -3,7 +3,7 @@
         <title>Go Tools</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta charset="utf-8"/>
-        <script src="https://cdn.jsdelivr.net/gh/golang/go@go1.22.5/misc/wasm/wasm_exec.js"></script>
+        <script src="https://cdn.jsdelivr.net/gh/golang/go@go1.24.6/lib/wasm/wasm_exec.js"></script>
         <script>
             const go = new Go();
             const loadGo = WebAssembly.instantiateStreaming(fetch("main.wasm"), go.importObject)
@@ -25,7 +25,23 @@
             .btn-space {
                 margin-top: 8px;
             }
-
+            .wide {
+                width: 100%;
+            }
+            .split {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-around;
+            }
+            .failure {
+                background: rgb(255, 100, 100);
+            }
+            :popover-open {
+                position: absolute;
+                inset: unset;
+                left: 5px;
+                bottom: 5px;
+            }
         </style>
     </head>
     <body>
@@ -69,6 +85,30 @@
                 <div class="btn-space"></div>
                 <button id="string-byte">String to Bytes</button>
                 <button id="byte-string">Bytes to String</button>
+
+                <div class="btn-space"></div>
+                <span>
+                    <button id="uuid-timestamp">UUIDv7 Timestamp</button>
+                </span>
+                 <dialog id="timestamp-dialog">
+                    <div>
+                        Timezone:
+                        <input id="uuid-timestamp-timezone" type="text" placeholder="(e.g., Local, UTC)" value='Local' />
+                    </div>
+                    <div>
+                        Fmt (Uses <a href="https://golang.org/pkg/time/#pkg-constants" target="_blank">Go standards</a>):
+                        <input id="uuid-timestamp-format" type="text" placeholder="(e.g., RFC1123, RFC3339, Datetime)" value='RFC1123' />
+                    </div>
+
+                    <div class="btn-space"></div>
+                    <input id="uuid-timestamp-result" class="wide" readonly/>
+
+                    <div class="btn-space"></div>
+                    <div class="split">
+                        <button id="uuid-timestamp-parse">Parse</button>
+                        <button id="close-dialog">Close</button>
+                    </div>
+                </dialog>
             </div>
         </div>
 
@@ -81,13 +121,66 @@
                 document.querySelectorAll('button').forEach(btn => btn.disabled = false);
             });
 
+
+            // https://mdn.github.io/dom-examples/popover-api/toast-popovers/
+            function makeErrorToast(msg) {
+                // Create an element and make it into a popover
+                const popover = document.createElement("article");
+                popover.popover = "manual";
+                popover.classList.add("toast");
+                popover.classList.add("newest");
+                popover.classList.add("failure");
+
+                // Give the toast its text content, and add it to the DOM
+                popover.textContent = msg;
+                document.body.appendChild(popover);
+
+                // Show the popover
+                popover.showPopover();
+
+                // Remove the toast again after 4 seconds
+                setTimeout(() => {
+                    popover.hidePopover();
+                    popover.remove();
+                }, 4000);
+
+                // When a new toast appears, run the movetoastsUp() function
+                popover.addEventListener("toggle", (event) => {
+                    if (event.newState === "open") {
+                        moveToastsUp();
+                    }
+                });
+            }
+            function moveToastsUp() {
+                const toasts = document.querySelectorAll(".toast");
+                toasts.forEach((toast) => {
+                    // If the toast is the one that has just appeared, we don't want it to move up.
+                    if (toast.classList.contains("newest")) {
+                        toast.style.bottom = `5px`;
+                        toast.classList.remove("newest");
+                    } else {
+                        // Move up all the other toasts by 50px to make way for the new one
+                        const prevValue = toast.style.bottom.replace("px", "");
+                        const newValue = parseInt(prevValue) + 50;
+                        toast.style.bottom = `${newValue}px`;
+                    }
+                });
+            }
+
+
             function addOnClick(button, goFn, input, output) {
                 button.onclick = (e) => {
                     e.preventDefault();
-                    const k = JSON.parse(golang[goFn](input.value));
-                    console.log(`Response from Go ${goFn}(${input.value})`, k);
+
+                    let inStr = input.value;
+                    if (typeof input === 'function') {
+                        inStr = input();
+                    }
+                    const k = JSON.parse(golang[goFn](inStr));
+                    console.log(`Response from Go ${goFn}(${inStr})`, k);
                     if (k.error) {
                         console.error(k.error)
+                        makeErrorToast(k.error);
                         return;
                     }
                     output.value = k.response;
@@ -131,6 +224,24 @@
             const phpDecode = document.querySelector('#php-serialize-decode');
             addOnClick(phpEncode, 'phpSerializeEncode', transformText, transformText);
             addOnClick(phpDecode, 'phpSerializeDecode', transformText, transformText);
+
+            const uuidDialog = document.querySelector('#timestamp-dialog');
+            document.querySelector('#uuid-timestamp').onclick = () => {
+                uuidTimestampParse.click(); // Trigger the parse button when showing the dialog
+                uuidDialog.showModal();
+            };
+            document.querySelector('#close-dialog').onclick = () => uuidDialog.close();
+
+            const uuidTimestamp = document.querySelector('#uuid-timestamp');
+            const timezoneInput = document.querySelector('#uuid-timestamp-timezone');
+            const timeFormatInput = document.querySelector('#uuid-timestamp-format');
+            const uuidTimestampResult = document.querySelector('#uuid-timestamp-result');
+            const uuidTimestampParse = document.querySelector('#uuid-timestamp-parse');
+            function uuidTimestampInput () {
+                return [transformText.value, timezoneInput.value, timeFormatInput.value].join(' ');
+            }
+            addOnClick(uuidTimestampParse, 'timestampUUIDv7', uuidTimestampInput, uuidTimestampResult);
+
 
             // Example text
             examples = [

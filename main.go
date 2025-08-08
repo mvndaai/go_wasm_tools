@@ -33,6 +33,7 @@ func main() {
 		{"urlEncode", htmltools.URLEncode},
 		{"urlDecode", htmltools.URLDecode},
 		{"genUUIDv7", uuid.GenerateUUIDv7},
+		{"timestampUUIDv7", uuid.TimestampUUIDv7},
 		{"phpSerializeEncode", php.Encode},
 		{"phpSerializeDecode", php.Decode},
 	}
