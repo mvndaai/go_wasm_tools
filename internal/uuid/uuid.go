@@ -5,6 +5,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	_ "time/tzdata"
 
 	"github.com/gofrs/uuid/v5"
 )
