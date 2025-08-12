@@ -52,10 +52,12 @@
             <div class="column">
                 <textarea id="transform-text" rows="24" cols="70">{"foo":"bar"}</textarea>
                 <div>
-                    <button id="ex-json">Example JSON</button>
-                    <button id="ex-html">Example HTML</button>
-                    <button id="ex-bytes">Example Bytes</button>
-                    <button id="gen-uuidv7">Generate UUIDv7</button>
+                    <span>Examples:</span>
+                    <button id="ex-json">JSON</button>
+                    <button id="ex-html">HTML</button>
+                    <button id="ex-url">URL</button>
+                    <button id="ex-bytes">Bytes</button>
+                    <button id="gen-uuidv7">UUIDv7</button>
                 </div>
             </div>
             <div class="column">
@@ -256,6 +258,10 @@
                 {
                     selector: '#ex-bytes',
                     text: () => '[72 101 108 108 111 32 87 111 114 108 100]'
+                },
+                {
+                    selector: '#ex-url',
+                    text: () => 'https://example.com/path?query=123&bool=true'
                 },
                 {
                     selector: '#gen-uuidv7',
