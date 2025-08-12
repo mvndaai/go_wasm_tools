@@ -52,12 +52,12 @@ func main() {
 }
 
 type output struct {
-	Error    interface{} `json:"error"`
-	Response interface{} `json:"response"`
+	Error    any `json:"error"`
+	Response any `json:"response"`
 }
 
 func JSWrapper(f JSWrappable) js.Func {
-	return js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+	return js.FuncOf(func(this js.Value, args []js.Value) any {
 		input := ""
 		if len(args) > 1 {
 			return "Invalid no of arguments passed"
