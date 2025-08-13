@@ -60,7 +60,7 @@ func JSWrapper(f JSWrappable) js.Func {
 	return js.FuncOf(func(this js.Value, args []js.Value) any {
 		input := ""
 		if len(args) > 1 {
-			return "Invalid no of arguments passed"
+			return "Invalid number of arguments passed"
 		}
 		if len(args) == 1 {
 			input = args[0].String()

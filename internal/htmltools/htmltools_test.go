@@ -73,6 +73,7 @@ func TestUrlEncodeDecode(t *testing.T) {
 		encoded string
 	}{
 		{decoded: `{"foo":"bar"}`, encoded: "%7B%22foo%22%3A%22bar%22%7D"},
+		{decoded: "https://google.com?asd=1 2", encoded: "https://google.com?asd=1+2"},
 	}
 
 	for _, tt := range tests {

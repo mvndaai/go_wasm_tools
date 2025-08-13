@@ -28,6 +28,14 @@ func B64Decode(s string) (string, error) {
 }
 
 func URLEncode(s string) (string, error) {
+	parsedURL, err := url.Parse(s)
+	if err == nil {
+		queryParams, err := url.ParseQuery(parsedURL.RawQuery)
+		if err == nil {
+			parsedURL.RawQuery = queryParams.Encode()
+		}
+		return parsedURL.String(), nil
+	}
 	return url.QueryEscape(s), nil
 }
 
