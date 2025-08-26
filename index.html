@@ -253,7 +253,16 @@
                 },
                 {
                     selector: '#ex-json',
-                    text: () =>'{"foo":"bar"}'
+                    text: async () => {
+                        let response = await golang.getDadJoke();
+                        response = JSON.parse(response);
+                        if (response.error) {
+                            console.error(response.error)
+                            makeErrorToast(response.error);
+                            return '{}';
+                        }
+                        return JSON.stringify(JSON.parse(response.response), null, '\t');
+                    }
                 },
                 {
                     selector: '#ex-bytes',
@@ -269,9 +278,10 @@
                 }
             ]
             for (const ex of examples) {
-                document.querySelector(ex.selector).onclick = (e) => {
+                document.querySelector(ex.selector).onclick = async (e) => {
                     e.preventDefault();
-                    transformText.value = ex.text();
+                    let text = await ex.text();
+                    transformText.value = text;
                 }
             }
         </script>
